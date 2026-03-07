@@ -1,6 +1,6 @@
 # Skills
 
-Agent skills for CLI tools and workflows.
+My personal collection of Agent skills. Enjoy!
 
 ## Install
 
