@@ -1,11 +1,11 @@
 ---
 name: agent-dx-cli-scale
-description: A scoring scale for evaluating how well a CLI is designed for AI agents, based on the "Rewrite Your CLI for AI Agents" principles.
+description: A scoring scale for evaluating how well a CLI is designed for AI agents, based on the "Rewrite Your CLI for AI Agents" principles. Scores 8 axes (0–24).
 ---
 
 # Agent DX CLI Scale
 
-Use this skill to **evaluate any CLI** against the principles of agent-first design. Score each axis from 0–3, then sum for a total between 0–21.
+Use this skill to **evaluate any CLI** against the principles of agent-first design. Score each axis from 0–3, then sum for a total between 0–24.
 
 > Human DX optimizes for discoverability and forgiveness.
 > Agent DX optimizes for predictability and defense-in-depth.
@@ -92,16 +92,27 @@ Does the CLI ship knowledge in formats agents can consume at conversation start?
 | 2     | Structured skill files (YAML frontmatter + Markdown) covering per-command or per-API-surface workflows and invariants.                                                                       |
 | 3     | Comprehensive skill library encoding agent-specific guardrails (_"always use --dry-run"_, _"always use --fields"_). Skills are versioned, discoverable, and follow a standard like OpenClaw. |
 
+### 8. Execution Contract
+
+Does the CLI behave predictably under agent orchestration conditions — retries, interrupts, and long waits?
+
+| Score | Criteria                                                                                                                                                                                                       |
+| ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0     | No declared timeouts. SIGTERM leaves child processes running. No idempotency support.                                                                                                                          |
+| 1     | Commands have a default timeout but it is not declared in schema or documented per-command.                                                                                                                    |
+| 2     | Every command declares `timeout_ms` in its schema. SIGTERM is caught and forwarded to child processes. Mutating commands accept an idempotency key.                                                            |
+| 3     | All of the above, plus: partial-failure responses include `completed_steps` so agents can resume rather than retry from scratch. Exit codes are stable and machine-documented via `--exit-codes` or `--schema`. |
+
 ---
 
 ## Interpreting the Total
 
-| Range | Rating             | Description                                                                                                                     |
-| ----- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
-| 0–5   | **Human-only**     | Built for humans. Agents will struggle with parsing, hallucinate inputs, and lack safety rails.                                 |
-| 6–10  | **Agent-tolerant** | Agents can use it, but they'll waste tokens, make avoidable errors, and require heavy prompt engineering to compensate.         |
-| 11–15 | **Agent-ready**    | Solid agent support. Structured I/O, input validation, and some introspection. A few gaps remain.                               |
-| 16–21 | **Agent-first**    | Purpose-built for agents. Full schema introspection, comprehensive input hardening, safety rails, and packaged agent knowledge. |
+| Range | Rating             | Description                                                                                                                                        |
+| ----- | ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0–6   | **Human-only**     | Built for humans. Agents will struggle with parsing, hallucinate inputs, and lack safety rails.                                                    |
+| 7–12  | **Agent-tolerant** | Agents can use it, but they'll waste tokens, make avoidable errors, and require heavy prompt engineering to compensate.                            |
+| 13–18 | **Agent-ready**    | Solid agent support. Structured I/O, input validation, and some introspection. A few gaps remain.                                                  |
+| 19–24 | **Agent-first**    | Purpose-built for agents. Full schema introspection, comprehensive input hardening, safety rails, packaged agent knowledge, and a reliable process contract. |
 
 ---
 
