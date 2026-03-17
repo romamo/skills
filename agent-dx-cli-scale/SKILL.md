@@ -101,7 +101,7 @@ Does the CLI behave predictably under agent orchestration conditions — retries
 | 0     | No declared timeouts. SIGTERM leaves child processes running. No idempotency support.                                                                                                                          |
 | 1     | Commands have a default timeout but it is not declared in schema or documented per-command.                                                                                                                    |
 | 2     | Every command declares `timeout_ms` in its schema. SIGTERM is caught and forwarded to child processes. Mutating commands accept an idempotency key.                                                            |
-| 3     | All of the above, plus: partial-failure responses include `completed_steps` so agents can resume rather than retry from scratch. Exit codes are stable and machine-documented via `--exit-codes` or `--schema`. |
+| 3     | Partial-failure responses include `completed_steps` for resumable retries. Exit codes are stable and machine-documented via `--exit-codes` or `--schema`. |
 
 ---
 
